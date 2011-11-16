@@ -1,4 +1,4 @@
 # Ldap Plugin python package
 from ldapplugin.api import *
-from ldapplugin.pathc import *
+from ldapplugin.patch import *
 
