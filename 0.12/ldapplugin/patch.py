@@ -13,23 +13,36 @@
 #------------------------------------------------------------------------------
 
 from trac.core import *
-#from trac. import AuthzPolicy
+from trac.env import IEnvironmentSetupParticipant
+from tracopt.perm.authz_policy import AuthzPolicy
 
 #------------------------------------------------------------------------------
 
 authz_permissions_old = AuthzPolicy.authz_permissions
+
+def authz_permissions_patch():
+    if AuthzPolicy.authz_permissions != authz_permissions_new:
+        authz_permissions_old = AuthzPolicy.authz_permissions  
+        AuthzPolicy.authz_permissions = authz_permissions_new
 
 #------------------------------------------------------------------------------
     
 class AuthsPolicyOnApacheLdap(Component):
     """ (draft) when enabled, altered Authz.authz_permissions is used
     """
-    
-    implements(ICoreInit)
+
+    implements(IEnvironmentSetupParticipant)       
+
+    # on Component activation, override existent method with new one
     def __init__(self):
-        # on Component activation, override existent method with new one
         authz_permissions_patch()
         self.log.debug('authz_permissions patched')
+        
+#TODO trac:#4190 - replace dummies to force component initialization
+    # IEnvironmentSetupParticipant    
+    def environment_created(self):           pass
+    def environment_needs_upgrade(self, db): return False
+    def upgrade_environment(self, db):       pass
 
 #---------------------------------
 
@@ -68,10 +81,7 @@ def authz_permissions_new(self, *args) :
                     self.log.debug('%s does not match any of valid_users: %s', who, valid_users)
     return None
     
-def authz_permissions_patch():
-    if AuthzPolicy.authz_permissions != authz_permissions_new:
-        authz_permissions_old = AuthzPolicy.authz_permissions  
-        AuthzPolicy.authz_permissions = authz_permissions_new    
+
 #------------------------------------------------------------------------------
   
 
