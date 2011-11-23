@@ -1,0 +1,6 @@
+AUTHORS: 
+ * Ilias Lazaridis <ilias@lazaridis.com>
+
+CONTRIBUTORS:
+  http://vanalboom.org/node/15
+
