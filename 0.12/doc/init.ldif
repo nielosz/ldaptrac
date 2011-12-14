@@ -1,0 +1,63 @@
+# File to initialize ldap-directory, based on:
+# http://trac-hacks.org/wiki/LdapPluginTests
+#
+# ----------------------------------------------------------------------
+
+# Organization definition
+dn: dc=example,dc=org
+dc: example
+o: Trac
+description: Test directory for Trac
+objectClass: dcObject
+objectClass: organization
+
+# Group definition
+# Managers is a group that has permission to add and revoke Trac permissions
+dn: cn=managers,dc=example,dc=org
+cn: managers
+objectClass: groupOfNames
+objectClass: tracgroup
+member: uid=trac,dc=example,dc=org
+
+# Group definition
+# Users is a group of regular users
+dn: cn=users,dc=example,dc=org
+cn: users
+objectClass: groupOfNames
+objectClass: tracgroup
+member: uid=joeuser,dc=example,dc=org
+
+# User definition
+# Trac is the 'software user' that manages the Trac permissions
+dn: uid=trac,dc=example,dc=org
+uid: trac
+cn: Trac Manager
+userPassword: Trac
+objectClass: tracuser
+
+# Special 'user': anonymous
+# joker entry for non authenticated access
+dn: uid=anonymous,dc=example,dc=org
+uid: anonymous
+cn: Trac Anonymous
+sn: Anonymous
+userPassword: no_use
+objectClass: tracuser
+
+# Special 'user': authenticated
+# joker entry for any authenticated access
+dn: uid=authenticated,dc=example,dc=org
+uid: authenticated
+cn: Trac Authenticated
+sn: Authenticated
+userPassword: no_use
+objectClass: tracuser
+
+# User definition
+# Joe User is just a regular user
+dn: uid=joeuser,dc=example,dc=org
+uid: joeuser
+cn: Joe User
+sn: User
+userPassword: anypasswd
+objectClass: tracuser
